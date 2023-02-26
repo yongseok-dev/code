@@ -7,20 +7,25 @@ mp.member_name, rr.review_text, rr.review_date
 */
 
 SELECT mp.member_name, rr.review_text, TO_CHAR(rr.review_date,'YYYY-MM-DD') AS review_date
-FROM REST_REVIEW rr LEFT JOIN MEMBER_PROFILE mp
-ON rr.member_id = mp.member_id
+FROM REST_REVIEW rr 
+    LEFT JOIN MEMBER_PROFILE mp
+    ON rr.member_id = mp.member_id
 WHERE mp.member_id IN (
     SELECT member_id
-    FROM (SELECT member_id, COUNT(*) AS count_review
+    FROM (
+        SELECT member_id, COUNT(*) AS count_review
         FROM rest_review
         GROUP BY member_id
-        ORDER BY count_review DESC)
+        ORDER BY count_review DESC
+    )
     WHERE count_review = (
         SELECT count_review
         FROM (
             SELECT member_id, COUNT(*) AS count_review
             FROM rest_review
             GROUP BY member_id
-            ORDER BY count_review DESC)
-        WHERE ROWNUM = 1))
+            ORDER BY count_review DESC
+        )
+        WHERE ROWNUM = 1)
+    )
 ORDER BY rr.review_date, review_date
