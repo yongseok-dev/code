@@ -1,28 +1,26 @@
 function solution(jobs) {
-    var answer = 0;
-    const queue = [];
-    let point = 0;
-    let count = 0;
+    let pointer = 0;
+    let answer = 0;
     let time = 0;
-    jobs.sort((a,b) => a[0]-b[0]);
-    while(count<jobs.length){
+    const array = [];
+    const queue = [];
+    while(array.length!=jobs.length){
         let isPush = false;
-        while(point<jobs.length&&time>=jobs[point][0]){
-            queue.push(jobs[point++]);
+        while(pointer<jobs.length&&time>=jobs[pointer][0]){
+            queue.push(jobs[pointer++]);
             isPush = true;
         }
-        if(isPush&&queue.length>1){
-            queue.sort((a,b) => b[1]-a[1]);
+        if(isPush&queue.length>1){
+            queue.sort((a,b)=> b[1]-a[1]);//우선순위            
         }
         if(queue.length>0){
             const temp = queue.pop();
+            array.push(temp);
             time += temp[1];
-            answer += (time-temp[0]);
-            count++;
+            answer += time-temp[0];
         }else{
             time++;
         }
-        // console.log(time,answer)
     }
-    return Math.floor(answer/count);
+    return Number.parseInt(answer/jobs.length);
 }
